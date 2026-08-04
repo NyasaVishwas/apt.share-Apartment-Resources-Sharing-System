@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: aptshare-mongo
+    restart: always
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_DATABASE: aptshare
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build:
+      context: ./apt-share-backend
+      dockerfile: Dockerfile
+    container_name: aptshare-backend
+    restart: always
+    ports:
+      - '5000:5000'
+    environment:
+      PORT: 5000
+      NODE_ENV: production
+      MONGODB_URI: mongodb://mongodb:27017/aptshare
+      JWT_ACCESS_SECRET: prod_access_secret_key_aptshare_99
+      JWT_REFRESH_SECRET: prod_refresh_secret_key_aptshare_99
+      CLIENT_URL: http://localhost
+    depends_on:
+      - mongodb
+
+  frontend:
+    build:
+      context: ./apt-share-frontend
+      dockerfile: Dockerfile
+    container_name: aptshare-frontend
+    restart: always
+    ports:
+      - '80:80'
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:

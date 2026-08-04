@@ -1,0 +1,49 @@
+name: apt.share CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'apt-share-backend/package-lock.json'
+
+      - name: Install Backend Dependencies
+        run: |
+          cd apt-share-backend
+          npm ci
+
+      - name: Run Backend Integration Test Suite
+        env:
+          MONGODB_URI: mongodb://localhost:27017/aptshare_test
+          JWT_ACCESS_SECRET: test_access_secret_key_aptshare
+          JWT_REFRESH_SECRET: test_refresh_secret_key_aptshare
+        run: |
+          cd apt-share-backend
+          npm test
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Compose Stack
+        run: |
+          docker compose build
