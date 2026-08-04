@@ -14,10 +14,10 @@ FROM node:20-alpine AS production
 WORKDIR /app
 
 ENV NODE_ENV=production
-ENV PORT=5000
+ENV PORT=5001
 
 COPY --from=build /app ./
 
-EXPOSE 5000
+EXPOSE 5001
 
 CMD ["node", "src/server.js"]

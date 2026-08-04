@@ -42,7 +42,7 @@
 cd apt-share-backend
 npm install
 npm run seed  # Seed 8 demo items and 3 test users
-npm run dev   # Express & Socket.IO server on http://localhost:5000
+npm run dev   # Express & Socket.IO server on http://localhost:5001
 ```
 
 #### 2. Frontend Setup
@@ -60,7 +60,7 @@ npm run dev   # Vite server on http://localhost:3000
 docker compose up --build
 ```
 - Access Frontend SPA: `http://localhost`
-- Access Backend API: `http://localhost:5000/health`
+- Access Backend API: `http://localhost:5001/health`
 
 ---
 

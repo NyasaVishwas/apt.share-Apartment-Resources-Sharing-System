@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const envSchema = z.object({
-  PORT: z.string().default('5000'),
+  PORT: z.string().default('5001'),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   MONGO_URI: z.string().default('mongodb://localhost:27017/apt_share'),
   JWT_ACCESS_SECRET: z.string().default('super-secret-access-key-apt-share-2026'),
