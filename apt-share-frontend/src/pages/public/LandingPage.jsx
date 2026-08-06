@@ -25,10 +25,10 @@ export const LandingPage = () => {
               {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
             <Link to="/login">
-              <Button variant="ghost" size="sm">Sign In</Button>
+              <Button variant="ghost" size="md">Sign In</Button>
             </Link>
             <Link to="/register">
-              <Button variant="primary" size="sm">
+              <Button variant="primary" size="md">
                 Get Started
               </Button>
             </Link>
@@ -290,7 +290,7 @@ export const LandingPage = () => {
               <div className="pt-4 border-t border-border/60 flex items-center justify-between text-xs font-mono">
                 <div>
                   <span className="font-bold text-ink block">Ananya Rao</span>
-                  <span className="text-ink-secondary">Flat A-504 · Oakridge Residency</span>
+                  <span className="text-ink-secondary">Oakridge Residency</span>
                 </div>
                 <Badge variant="teal">VERIFIED BORROWER</Badge>
               </div>
@@ -304,7 +304,7 @@ export const LandingPage = () => {
               <div className="pt-4 border-t border-border/60 flex items-center justify-between text-xs font-mono">
                 <div>
                   <span className="font-bold text-ink block">Vikram Desai</span>
-                  <span className="text-ink-secondary">Flat B-112 · Shanti Nagar Society</span>
+                  <span className="text-ink-secondary">Shanti Nagar Society</span>
                 </div>
                 <Badge variant="amber">ACTIVE LENDER</Badge>
               </div>
@@ -318,7 +318,7 @@ export const LandingPage = () => {
               <div className="pt-4 border-t border-border/60 flex items-center justify-between text-xs font-mono">
                 <div>
                   <span className="font-bold text-ink block">Siddharth & Meera</span>
-                  <span className="text-ink-secondary">Tower C-301 · Lakeview Residency</span>
+                  <span className="text-ink-secondary">Lakeview Residency</span>
                 </div>
                 <Badge variant="teal">TRUSTED MEMBER</Badge>
               </div>
