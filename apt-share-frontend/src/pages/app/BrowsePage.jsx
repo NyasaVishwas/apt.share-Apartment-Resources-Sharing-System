@@ -5,7 +5,7 @@ import { ListingCard } from '../../components/data-display/ListingCard';
 import { CategoryFilter } from '../../components/data-display/CategoryFilter';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
-import { Search, PlusCircle, SlidersHorizontal, PackageX } from 'lucide-react';
+import { Search, PlusCircle, SlidersHorizontal, PackageX, Building2 } from 'lucide-react';
 
 export const BrowsePage = () => {
   const [listings, setListings] = useState([]);
@@ -53,20 +53,20 @@ export const BrowsePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bg text-text-primary flex flex-col">
+    <div className="min-h-screen bg-bg text-ink flex flex-col font-sans selection:bg-amber selection:text-ink">
       {/* Header Bar */}
-      <header className="border-b border-border bg-surface sticky top-0 z-30">
+      <header className="border-b border-border bg-surface sticky top-0 z-30 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/dashboard" className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-md bg-accent text-white font-bold text-lg flex items-center justify-center">
+            <div className="w-8 h-8 rounded bg-ink text-bg font-serif font-bold text-lg flex items-center justify-center shadow-sm">
               a
             </div>
-            <span className="font-bold text-lg tracking-tight">apt.share</span>
+            <span className="font-serif font-bold text-lg tracking-tight text-ink">apt.share</span>
           </Link>
 
           <div className="flex items-center space-x-3">
             <Link to="/items/new">
-              <Button size="sm" className="flex items-center space-x-1">
+              <Button size="sm" variant="primary" className="flex items-center space-x-1">
                 <PlusCircle className="w-4 h-4 mr-1" />
                 <span>List an Item</span>
               </Button>
@@ -80,46 +80,53 @@ export const BrowsePage = () => {
 
       {/* Main Browse Container */}
       <main className="max-w-7xl mx-auto px-6 py-8 flex-1 w-full space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Community Inventory</h1>
-          <p className="text-sm text-text-secondary mt-1">
-            Discover tools, camping gear, and appliances available for borrow in your society
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
+          <div>
+            <div className="text-xs font-mono uppercase tracking-wider text-ink-secondary mb-1">
+              BUILDING CATALOG
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight text-ink">
+              Community Resource Inventory
+            </h1>
+            <p className="text-sm text-ink-secondary mt-1">
+              Explore tools, camping gear, and household equipment posted by verified neighbors
+            </p>
+          </div>
         </div>
 
         {/* Filter Controls Row */}
         <div className="flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
           <div className="relative flex-1">
-            <Search className="w-4 h-4 absolute left-3 top-3 text-text-secondary" />
+            <Search className="w-4 h-4 absolute left-3.5 top-3 text-ink-secondary" />
             <input
               type="text"
-              placeholder="Search by item title, brand, or tag..."
+              placeholder="Search by item title, brand, or keyword..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-surface border border-border rounded-md text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+              className="w-full pl-10 pr-4 py-2 bg-surface border border-border rounded-md text-sm text-ink placeholder:text-ink-secondary/50 focus:outline-none focus:ring-2 focus:ring-amber/50 focus:border-amber transition-all"
             />
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 font-mono">
             <select
               value={feeFilter}
               onChange={(e) => setFeeFilter(e.target.value)}
-              className="px-3 py-2 bg-surface border border-border rounded-md text-xs font-semibold text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+              className="px-3 py-2 bg-surface border border-border rounded-md text-xs font-semibold text-ink focus:outline-none focus:ring-2 focus:ring-amber/50 focus:border-amber"
             >
-              <option value="all">All Fees</option>
-              <option value="free">Free Borrow</option>
-              <option value="paid">Paid Rental</option>
+              <option value="all">ALL FEES</option>
+              <option value="free">FREE BORROW ONLY</option>
+              <option value="paid">PAID RENTAL ONLY</option>
             </select>
 
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-3 py-2 bg-surface border border-border rounded-md text-xs font-semibold text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+              className="px-3 py-2 bg-surface border border-border rounded-md text-xs font-semibold text-ink focus:outline-none focus:ring-2 focus:ring-amber/50 focus:border-amber"
             >
-              <option value="newest">Newest First</option>
-              <option value="popular">Most Popular</option>
-              <option value="rating">Highest Rated</option>
-              <option value="deposit_low">Deposit: Low to High</option>
+              <option value="newest">NEWEST LISTINGS</option>
+              <option value="popular">MOST POPULAR</option>
+              <option value="rating">HIGHEST RATED</option>
+              <option value="deposit_low">LOWEST DEPOSIT</option>
             </select>
           </div>
         </div>
@@ -130,25 +137,34 @@ export const BrowsePage = () => {
           onSelectCategory={setSelectedCategory}
         />
 
-        {/* Listings Grid */}
+        {/* Listings Grid with matching 4:3 skeleton loaders */}
         {loading ? (
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 py-8">
-            {[1, 2, 3, 4].map((n) => (
-              <div key={n} className="h-64 bg-surface border border-border rounded-lg animate-pulse"></div>
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 py-4">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+              <div key={n} className="ledger-ticket overflow-hidden h-72 animate-pulse bg-surface p-4 flex flex-col justify-between">
+                <div className="aspect-[4/3] w-full bg-surface-sunken rounded-md"></div>
+                <div className="space-y-2 pt-2">
+                  <div className="h-4 bg-surface-sunken rounded w-3/4"></div>
+                  <div className="h-3 bg-surface-sunken rounded w-1/2"></div>
+                </div>
+              </div>
             ))}
           </div>
         ) : listings.length === 0 ? (
-          <div className="p-12 bg-surface border border-border rounded-lg text-center space-y-3">
-            <PackageX className="w-12 h-12 text-text-secondary mx-auto" />
-            <h3 className="text-lg font-semibold">No Listings Found</h3>
-            <p className="text-sm text-text-secondary max-w-sm mx-auto">
-              No items match your search or filter options. Be the first to share an item with your neighbors!
+          /* Direct, friendly empty state */
+          <div className="ledger-ticket-sunken p-12 text-center space-y-3 my-6">
+            <PackageX className="w-12 h-12 text-ink-secondary mx-auto opacity-60" />
+            <h3 className="font-serif font-bold text-xl text-ink">No items match your filter</h3>
+            <p className="text-sm text-ink-secondary max-w-md mx-auto">
+              You haven't found any listings matching "{searchQuery || selectedCategory}". Try adjusting your filters or list an item you own to get started.
             </p>
-            <Link to="/items/new">
-              <Button variant="primary" size="sm" className="mt-2">
-                Create First Listing
-              </Button>
-            </Link>
+            <div className="pt-2">
+              <Link to="/items/new">
+                <Button variant="primary" size="sm">
+                  List an Item for Neighbors
+                </Button>
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -164,9 +180,10 @@ export const BrowsePage = () => {
         )}
       </main>
 
-      <footer className="border-t border-border py-6 text-center text-xs text-text-secondary">
+      <footer className="border-t border-border py-6 bg-surface text-center text-xs font-mono text-ink-secondary">
         <p>apt.share v1.0 • Community Inventory</p>
       </footer>
     </div>
   );
 };
+

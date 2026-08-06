@@ -79,7 +79,7 @@ export const FeedPage = () => {
             <div className="space-y-4">
               <h2 className="text-lg font-bold flex items-center space-x-2">
                 <Sparkles className="w-5 h-5 text-accent" />
-                <span>Recommended for You (Category Affinity Graph)</span>
+                <span>Recommended for You</span>
               </h2>
               <div className="grid sm:grid-cols-2 gap-4">
                 {feed.recommendations.map((item) => (
@@ -105,7 +105,7 @@ export const FeedPage = () => {
           <Card elevated className="p-5 space-y-4">
             <h3 className="font-bold text-base flex items-center space-x-2">
               <Trophy className="w-5 h-5 text-warning" />
-              <span>Top Lenders Leaderboard (Max-Heap)</span>
+              <span>Top Lenders Leaderboard</span>
             </h3>
             <p className="text-xs text-text-secondary">
               Neighbors with the most completed lend transactions

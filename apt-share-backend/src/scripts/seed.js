@@ -16,7 +16,7 @@ const seedData = async () => {
   await Membership.deleteMany({});
   await Listing.deleteMany({});
 
-  logger.info('Seeding initial data...');
+  logger.info('Seeding initial data with Indian residential context...');
 
   const passwordHash = await bcrypt.hash('password123', 10);
 
@@ -55,13 +55,37 @@ const seedData = async () => {
     trustBadges: ['community_star']
   });
 
+  // Demo Resident User 3 (Ananya)
+  const resident3 = await User.create({
+    name: 'Ananya Rao',
+    email: 'ananya@example.com',
+    passwordHash,
+    role: 'resident',
+    emailVerified: true,
+    profileComplete: true,
+    trustScore: 96,
+    trustBadges: ['trusted_lender']
+  });
+
+  // Demo Resident User 4 (Vikram)
+  const resident4 = await User.create({
+    name: 'Vikram Desai',
+    email: 'vikram@example.com',
+    passwordHash,
+    role: 'resident',
+    emailVerified: true,
+    profileComplete: true,
+    trustScore: 92,
+    trustBadges: ['top_borrower']
+  });
+
   // Demo Community
   const community = await Community.create({
     name: 'Green Valley Heights',
     slug: 'green-valley-heights',
     type: 'apartment',
     address: {
-      line1: '100 Palm Meadows Drive',
+      line1: '100 Palm Meadows Drive, Whitefield',
       city: 'Bengaluru',
       state: 'Karnataka',
       pincode: '560066',
@@ -75,7 +99,7 @@ const seedData = async () => {
     status: 'active',
     requestedByUserId: adminUser._id,
     approvedByUserId: adminUser._id,
-    memberCount: 2,
+    memberCount: 4,
     activeListingCount: 8
   });
 
@@ -85,8 +109,8 @@ const seedData = async () => {
     communityId: community._id,
     role: 'resident',
     status: 'active',
-    unit: 'A-302',
-    block: 'Tower A',
+    unit: 'Flat A-302',
+    block: 'Wing A',
     isActiveContext: true
   });
 
@@ -95,8 +119,28 @@ const seedData = async () => {
     communityId: community._id,
     role: 'resident',
     status: 'active',
-    unit: 'B-501',
-    block: 'Tower B',
+    unit: 'Flat B-501',
+    block: 'Wing B',
+    isActiveContext: true
+  });
+
+  await Membership.create({
+    userId: resident3._id,
+    communityId: community._id,
+    role: 'resident',
+    status: 'active',
+    unit: 'Flat A-504',
+    block: 'Wing A',
+    isActiveContext: true
+  });
+
+  await Membership.create({
+    userId: resident4._id,
+    communityId: community._id,
+    role: 'resident',
+    status: 'active',
+    unit: 'Flat C-112',
+    block: 'Wing C',
     isActiveContext: true
   });
 
@@ -117,7 +161,7 @@ const seedData = async () => {
       securityDeposit: 1500,
       rentalFeePerDay: 0,
       maxBorrowDurationDays: 5,
-      pickupInstructions: 'Pick up at Tower A, Flat 302 after 6 PM on weekdays.',
+      pickupInstructions: 'Pick up at Wing A, Flat A-302 after 6 PM on weekdays.',
       usageInstructions: 'Please ensure battery is fully charged before returning. Do not use on reinforced concrete columns.',
       accessoriesIncluded: ['2x 18V Batteries', 'Fast Charger', 'Carry Case', 'Drill Bit Set'],
       tags: ['drill', 'powertool', 'diy', 'bosch', 'repair'],
@@ -140,7 +184,7 @@ const seedData = async () => {
       securityDeposit: 2000,
       rentalFeePerDay: 150,
       maxBorrowDurationDays: 3,
-      pickupInstructions: 'Tower B, Flat 501. Ring doorbell anytime weekend mornings.',
+      pickupInstructions: 'Wing B, Flat B-501. Ring doorbell anytime weekend mornings.',
       usageInstructions: 'Connect to standard 1/2 inch garden hose. Drain water completely before returning.',
       accessoriesIncluded: ['High Pressure Hose (6m)', 'Dirt Blaster Lance', 'Foam Nozzle'],
       tags: ['pressurewasher', 'cleaning', 'carwash', 'patio'],
@@ -149,7 +193,7 @@ const seedData = async () => {
       ratingCount: 12
     },
     {
-      ownerId: resident1._id,
+      ownerId: resident3._id,
       communityId: community._id,
       title: 'DJI Mini 3 Pro Drone with Fly More Combo',
       description: 'Lightweight 4K HDR camera drone under 249g. Includes RC controller with built-in screen, 3 intelligent flight batteries, and shoulder bag.',
@@ -163,7 +207,7 @@ const seedData = async () => {
       securityDeposit: 5000,
       rentalFeePerDay: 500,
       maxBorrowDurationDays: 4,
-      pickupInstructions: 'Tower A 302. In-person demonstration provided upon pickup.',
+      pickupInstructions: 'Wing A, Flat A-504. In-person demonstration provided upon pickup.',
       usageInstructions: 'Do not fly in strong winds (>25 km/h) or heavy rain. Keep within line of sight.',
       accessoriesIncluded: ['DJI RC', '3x Flight Batteries', 'Charging Hub', 'Carry Bag', 'Spare Propellers'],
       tags: ['drone', 'dji', 'photography', '4k', 'travel'],
@@ -172,7 +216,7 @@ const seedData = async () => {
       ratingCount: 6
     },
     {
-      ownerId: resident2._id,
+      ownerId: resident4._id,
       communityId: community._id,
       title: 'Coleman 4-Person Waterproof Camping Tent & Sleeping Bags',
       description: 'Spacious WeatherTec dome tent with setup under 10 minutes. Includes 2 insulated sleeping bags and rechargeable LED camping lantern.',
@@ -186,7 +230,7 @@ const seedData = async () => {
       securityDeposit: 1200,
       rentalFeePerDay: 100,
       maxBorrowDurationDays: 7,
-      pickupInstructions: 'Tower B 501. Pick up prior to your weekend trek.',
+      pickupInstructions: 'Wing C, Flat C-112. Pick up prior to your weekend trek.',
       usageInstructions: 'Ensure tent is completely dry before packing into carry bag to prevent mold.',
       accessoriesIncluded: ['Tent Stakes', 'Rainfly', '2x Sleeping Bags', 'LED Lantern'],
       tags: ['camping', 'tent', 'outdoor', 'trekking', 'coleman'],
@@ -209,7 +253,7 @@ const seedData = async () => {
       securityDeposit: 1000,
       rentalFeePerDay: 0,
       maxBorrowDurationDays: 3,
-      pickupInstructions: 'Tower A 302. Available weekdays.',
+      pickupInstructions: 'Wing A, Flat A-302. Available weekdays.',
       usageInstructions: 'Wash inner stainless steel pot with non-abrasive sponge. Do not submerge electric heating base.',
       accessoriesIncluded: ['Steam Rack', 'Ladle', 'Measuring Cup', 'Recipe Booklet'],
       tags: ['instantpot', 'cooking', 'kitchen', 'party'],
@@ -232,7 +276,7 @@ const seedData = async () => {
       securityDeposit: 3000,
       rentalFeePerDay: 300,
       maxBorrowDurationDays: 2,
-      pickupInstructions: 'Tower B 501. Wheels and telescopic handle make it easy to roll to clubhouse.',
+      pickupInstructions: 'Wing B, Flat B-501. Wheels and telescopic handle make it easy to roll to clubhouse.',
       usageInstructions: 'Maintain moderate volume after 10 PM in residential zones per society guidelines.',
       accessoriesIncluded: ['AC Power Cord', 'Wired Karaoke Mic'],
       tags: ['jbl', 'speaker', 'party', 'bluetooth', 'music'],
@@ -241,7 +285,7 @@ const seedData = async () => {
       ratingCount: 15
     },
     {
-      ownerId: resident1._id,
+      ownerId: resident3._id,
       communityId: community._id,
       title: 'Chicco Next2Me Side Sleeping Baby Crib',
       description: 'Co-sleeping crib with adjustable height and breathable mesh windows. Cleaned and sanitized with hypoallergenic baby detergent.',
@@ -255,7 +299,7 @@ const seedData = async () => {
       securityDeposit: 2000,
       rentalFeePerDay: 50,
       maxBorrowDurationDays: 14,
-      pickupInstructions: 'Tower A 302.',
+      pickupInstructions: 'Wing A, Flat A-504.',
       usageInstructions: 'Use fitted sheet provided. Suitable for infants up to 9kg.',
       accessoriesIncluded: ['Padded Mattress', 'Travel Bag', '2x Fitted Sheets'],
       tags: ['baby', 'crib', 'chicco', 'kids'],
@@ -264,7 +308,7 @@ const seedData = async () => {
       ratingCount: 3
     },
     {
-      ownerId: resident2._id,
+      ownerId: resident4._id,
       communityId: community._id,
       title: 'Decathlon Table Tennis Portable Rollnet Set',
       description: 'Attaches in 10 seconds to any household dining table (up to 1.7m wide). Includes 4 bats and 12 ITTF approved 3-star balls.',
@@ -278,7 +322,7 @@ const seedData = async () => {
       securityDeposit: 500,
       rentalFeePerDay: 0,
       maxBorrowDurationDays: 5,
-      pickupInstructions: 'Tower B 501.',
+      pickupInstructions: 'Wing C, Flat C-112.',
       usageInstructions: 'Keep bats in protective case when not playing.',
       accessoriesIncluded: ['Rollnet', '4x Bats', '12x TT Balls', 'Mesh Carry Case'],
       tags: ['tabletennis', 'sports', 'decathlon', 'indoor'],
@@ -288,7 +332,7 @@ const seedData = async () => {
     }
   ]);
 
-  logger.info('Database seeded successfully with 8 listings!');
+  logger.info('Database seeded successfully with Indian residential context!');
   logger.info(`Demo Login: aarav@example.com / password123`);
   logger.info(`Admin Login: admin@aptshare.com / password123`);
 

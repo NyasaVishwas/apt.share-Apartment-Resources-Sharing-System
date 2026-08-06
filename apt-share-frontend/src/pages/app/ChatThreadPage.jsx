@@ -102,14 +102,14 @@ export const ChatThreadPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bg text-text-primary flex flex-col">
-      <header className="border-b border-border bg-surface sticky top-0 z-30">
-        <div className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/chat" className="inline-flex items-center space-x-2 text-sm text-text-secondary hover:text-text-primary">
+    <div className="min-h-screen bg-bg text-ink flex flex-col font-sans selection:bg-amber selection:text-ink">
+      <header className="border-b border-border bg-surface sticky top-0 z-30 shadow-sm">
+        <div className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between font-mono">
+          <Link to="/chat" className="inline-flex items-center space-x-2 text-xs text-ink-secondary hover:text-ink">
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Threads</span>
+            <span>RETURN TO CHATS</span>
           </Link>
-          <span className="font-bold text-base">Direct Neighbor Chat</span>
+          <span className="font-bold text-sm text-ink">DIRECT NEIGHBOR MESSAGES</span>
           <div></div>
         </div>
       </header>
@@ -118,27 +118,27 @@ export const ChatThreadPage = () => {
         {/* Messages Body Scroll Area */}
         <div className="flex-1 bg-surface border border-border rounded-lg p-6 overflow-y-auto max-h-[65vh] space-y-4 shadow-sm">
           {loading ? (
-            <div className="text-center text-text-secondary text-sm py-8">Loading message history...</div>
+            <div className="text-center font-mono text-ink-secondary text-xs py-8">Loading message ledger...</div>
           ) : messages.length === 0 ? (
-            <div className="text-center text-text-secondary text-sm py-8">No messages yet. Send a greeting to connect!</div>
+            <div className="text-center font-mono text-ink-secondary text-xs py-8">No messages logged yet. Send a greeting to align doorstep pickup time.</div>
           ) : (
             messages.map((m) => {
               const isMine = m.senderId?._id?.toString() === user?._id?.toString() || m.senderId === user?._id;
               return (
                 <div key={m._id} className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}>
-                  <span className="text-[10px] text-text-secondary mb-1">
+                  <span className="text-[10px] font-mono text-ink-secondary mb-1">
                     {isMine ? 'You' : m.senderId?.name || 'Neighbor'}
                   </span>
                   <div
-                    className={`max-w-xs md:max-w-md px-4 py-2.5 rounded-lg text-sm ${
+                    className={`max-w-xs md:max-w-md px-4 py-2.5 rounded-md text-sm leading-relaxed ${
                       isMine
-                        ? 'bg-accent text-white rounded-br-none'
-                        : 'bg-bg-elevated text-text-primary border border-border rounded-bl-none'
+                        ? 'bg-amber text-ink font-medium shadow-sm border border-amber/40'
+                        : 'bg-surface-sunken text-ink border border-border'
                     }`}
                   >
                     {m.body}
                   </div>
-                  <span className="text-[9px] text-text-secondary mt-1">
+                  <span className="text-[9px] font-mono text-ink-secondary mt-1">
                     {new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
@@ -147,23 +147,26 @@ export const ChatThreadPage = () => {
           )}
 
           {isTyping && (
-            <div className="text-xs text-text-secondary italic animate-pulse">Neighbor is typing...</div>
+            <div className="text-xs font-mono text-ink-secondary flex items-center space-x-1">
+              <span>Neighbor is composing message</span>
+              <span className="animate-pulse">...</span>
+            </div>
           )}
           <div ref={messagesEndRef} />
         </div>
 
         {/* Input Bar */}
-        <form onSubmit={handleSend} className="mt-4 flex items-center space-x-2">
+        <form onSubmit={handleSend} className="mt-4 flex items-center space-x-3">
           <input
             type="text"
-            placeholder="Type your message..."
+            placeholder="Type message to neighbor..."
             value={inputMessage}
             onChange={handleInputChange}
-            className="flex-1 px-4 py-3 bg-surface border border-border rounded-lg text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+            className="flex-1 px-4 py-2.5 bg-surface border border-border rounded-md text-sm text-ink placeholder:text-ink-secondary/50 focus:outline-none focus:ring-2 focus:ring-amber/50 focus:border-amber transition-all"
           />
-          <Button type="submit" size="md" className="px-6 py-3">
-            <Send className="w-4 h-4 mr-1" />
-            <span>Send</span>
+          <Button type="submit" variant="primary" size="md" className="px-6 font-mono">
+            <Send className="w-4 h-4 mr-1.5" />
+            <span>SEND</span>
           </Button>
         </form>
       </main>

@@ -59,68 +59,78 @@ export const DisputePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bg text-text-primary flex flex-col">
-      <header className="border-b border-border bg-surface sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/dashboard" className="inline-flex items-center space-x-2 text-sm text-text-secondary hover:text-text-primary">
+    <div className="min-h-screen bg-bg text-ink flex flex-col font-sans selection:bg-amber selection:text-ink">
+      <header className="border-b border-border bg-surface sticky top-0 z-30 shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between font-mono">
+          <Link to="/dashboard" className="inline-flex items-center space-x-2 text-xs text-ink-secondary hover:text-ink">
             <ArrowLeft className="w-4 h-4" />
-            <span>Dashboard</span>
+            <span>RETURN TO DASHBOARD</span>
           </Link>
-          <span className="font-bold text-base">Community Admin Dispute Center</span>
+          <span className="font-bold text-sm text-ink">COMMUNITY DISPUTE & AUDIT QUEUE</span>
           <div></div>
         </div>
       </header>
 
       <main className="max-w-5xl mx-auto px-6 py-8 flex-1 w-full space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Damage Incident Queue</h1>
-          <p className="text-sm text-text-secondary mt-1">
-            Review resident claims, photo evidence, and authorize deposit ledger adjustments
+        <div className="border-b border-border pb-4">
+          <div className="text-xs font-mono uppercase tracking-wider text-ink-secondary mb-1">ADMIN OVERSIGHT</div>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-ink tracking-tight">Damage Incident Queue</h1>
+          <p className="text-sm text-ink-secondary mt-1">
+            Review resident claims, inspect verification logs, and authorize deposit escrow adjustments.
           </p>
         </div>
 
         {loading ? (
           <div className="space-y-4">
             {[1, 2].map((n) => (
-              <div key={n} className="h-28 bg-surface border border-border rounded-lg animate-pulse"></div>
+              <div key={n} className="h-28 ledger-ticket animate-pulse bg-surface p-5"></div>
             ))}
           </div>
         ) : reports.length === 0 ? (
-          <Card className="p-12 text-center space-y-3">
-            <ShieldAlert className="w-12 h-12 text-success mx-auto" />
-            <h3 className="text-lg font-semibold">No Pending Disputes</h3>
-            <p className="text-sm text-text-secondary">Your community currently has 0 open damage reports.</p>
-          </Card>
+          <div className="ledger-ticket-sunken p-12 text-center space-y-3">
+            <ShieldAlert className="w-12 h-12 text-teal mx-auto opacity-70" />
+            <h3 className="font-serif font-bold text-xl text-ink">No Pending Disputes</h3>
+            <p className="text-sm text-ink-secondary font-mono">Your building ledger currently has zero unresolved incident reports.</p>
+          </div>
         ) : (
           <div className="space-y-4">
             {reports.map((r) => (
-              <Card key={r._id} className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <h3 className="font-semibold text-sm text-text-primary">
+              <div key={r._id} className="ledger-ticket p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="space-y-1.5">
+                  <div className="flex items-center space-x-3">
+                    <h3 className="font-serif font-bold text-base text-ink">
                       {r.bookingId?.listingId?.title || 'Shared Resource'}
                     </h3>
-                    <Badge variant={r.status === 'open' ? 'danger' : 'default'}>
-                      {r.status}
-                    </Badge>
+                    <span className={`stamp-badge ${
+                      r.status === 'open' 
+                        ? 'stamp-badge-danger' 
+                        : r.decision === 'deduct' 
+                        ? 'stamp-badge-amber' 
+                        : 'stamp-badge-teal'
+                    } text-[10px] py-0.5 px-2`}>
+                      {r.status === 'open' ? 'OPEN INCIDENT' : r.decision ? r.decision.toUpperCase() : 'RESOLVED'}
+                    </span>
                   </div>
-                  <p className="text-xs text-text-secondary">
-                    Reported by: <span className="font-semibold text-text-primary">{r.reportedByUserId?.name}</span> against <span className="font-semibold text-text-primary">{r.againstUserId?.name}</span>
+                  <p className="text-xs text-ink-secondary font-mono">
+                    CLAIMANT: <span className="font-bold text-ink">{r.reportedByUserId?.name}</span> • RESPONDENT: <span className="font-bold text-ink">{r.againstUserId?.name}</span>
                   </p>
-                  <p className="text-xs text-text-secondary italic">"{r.description}"</p>
+                  <p className="text-xs text-ink bg-surface-sunken p-2.5 rounded border border-border italic font-serif leading-relaxed">
+                    "{r.description}"
+                  </p>
                 </div>
 
-                <div className="flex items-center space-x-3">
-                  <span className="text-xs font-semibold text-accent">
-                    Deposit Hold: ₹{r.bookingId?.listingId?.securityDeposit || 0}
-                  </span>
+                <div className="flex items-center space-x-4 shrink-0 font-mono">
+                  <div className="text-right">
+                    <span className="text-[10px] text-ink-secondary block uppercase">Deposit Escrow</span>
+                    <span className="font-bold text-amber text-sm">₹{r.bookingId?.listingId?.securityDeposit || 0}</span>
+                  </div>
                   {r.status === 'open' && (
-                    <Button size="sm" onClick={() => setSelectedReport(r)}>
-                      Review & Resolve
+                    <Button size="sm" variant="primary" onClick={() => setSelectedReport(r)} className="font-mono">
+                      REVIEW & RESOLVE
                     </Button>
                   )}
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         )}
@@ -132,25 +142,25 @@ export const DisputePage = () => {
         onClose={() => setSelectedReport(null)}
         title="Admin Dispute Decision"
       >
-        <form onSubmit={handleResolve} className="space-y-4">
-          {error && <div className="p-3 rounded bg-danger/10 border border-danger/20 text-danger text-sm">{error}</div>}
+        <form onSubmit={handleResolve} className="space-y-4 font-sans">
+          {error && <div className="p-3 rounded bg-danger/10 border border-danger/30 text-danger text-xs font-mono">{error}</div>}
 
-          <div className="p-3 bg-bg-elevated rounded border border-border text-xs space-y-1">
-            <p><span className="font-semibold">Claim:</span> {selectedReport?.description}</p>
-            <p><span className="font-semibold">Deposit Hold Amount:</span> ₹{selectedReport?.bookingId?.listingId?.securityDeposit}</p>
+          <div className="p-4 bg-surface-sunken rounded border border-border text-xs font-mono space-y-1.5">
+            <p><span className="text-ink-secondary">CLAIM:</span> {selectedReport?.description}</p>
+            <p><span className="text-ink-secondary">DEPOSIT HOLD:</span> <span className="font-bold text-amber">₹{selectedReport?.bookingId?.listingId?.securityDeposit}</span></p>
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-text-secondary">
-              Admin Decision
+            <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-ink-secondary">
+              ADMIN DECISION
             </label>
             <select
               value={decision}
               onChange={(e) => setDecision(e.target.value)}
-              className="w-full px-3.5 py-2 text-sm bg-surface border border-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+              className="w-full px-3.5 py-2 text-sm bg-surface border border-border rounded-md text-ink font-mono focus:outline-none focus:ring-2 focus:ring-amber/50 focus:border-amber"
             >
-              <option value="deduct">Deduct Deposit & Compensate Owner</option>
-              <option value="dismiss">Dismiss Claim & Release Deposit</option>
+              <option value="deduct">STAMP: DEDUCT DEPOSIT & COMPENSATE OWNER</option>
+              <option value="dismiss">STAMP: DISMISS CLAIM & RELEASE DEPOSIT</option>
             </select>
           </div>
 
@@ -166,15 +176,15 @@ export const DisputePage = () => {
           )}
 
           <Input
-            label="Resolution Note"
-            placeholder="Reasoning for decision logged to immutable audit trail..."
+            label="Resolution Audit Note"
+            placeholder="Log technical reasoning to building audit trail..."
             value={note}
             onChange={(e) => setNote(e.target.value)}
             required
           />
 
-          <Button type="submit" loading={actionLoading} className="w-full">
-            Authorize Decision & Log Audit Event
+          <Button type="submit" loading={actionLoading} variant="teal" className="w-full font-mono">
+            AUTHORIZE STAMP DECISION
           </Button>
         </form>
       </Modal>

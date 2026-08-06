@@ -13,19 +13,19 @@ export const Input = ({
   return (
     <div className="w-full space-y-1.5">
       {label && (
-        <label htmlFor={inputId} className="block text-xs font-semibold uppercase tracking-wider text-text-secondary">
+        <label htmlFor={inputId} className="block text-xs font-mono font-semibold uppercase tracking-wider text-ink-secondary">
           {label}
         </label>
       )}
       <input
         id={inputId}
-        className={`w-full px-3.5 py-2 text-sm bg-surface border rounded-md text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all ${
+        className={`w-full px-3.5 py-2 text-sm bg-surface border rounded-md text-ink placeholder:text-ink-secondary/50 focus:outline-none focus:ring-2 focus:ring-amber/50 focus:border-amber transition-all ${
           error ? 'border-danger focus:ring-danger' : 'border-border'
         } ${className}`}
         {...props}
       />
       {error && <p className="text-xs text-danger font-medium">{error}</p>}
-      {!error && helperText && <p className="text-xs text-text-secondary">{helperText}</p>}
+      {!error && helperText && <p className="text-xs text-ink-secondary">{helperText}</p>}
     </div>
   );
 };

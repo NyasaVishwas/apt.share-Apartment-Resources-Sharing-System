@@ -1,15 +1,16 @@
 import React from 'react';
 
 const variants = {
-  primary: 'bg-accent hover:bg-accent-hover text-white shadow-sm',
-  secondary: 'bg-bg-elevated hover:bg-border text-text-primary border border-border',
-  outline: 'border border-border hover:bg-bg-elevated text-text-primary',
-  danger: 'bg-danger hover:opacity-90 text-white shadow-sm',
-  ghost: 'hover:bg-bg-elevated text-text-secondary hover:text-text-primary'
+  primary: 'bg-amber text-ink hover:bg-amber/90 border border-amber/40 shadow-sm font-semibold active:translate-y-[1px]',
+  secondary: 'bg-surface-sunken hover:bg-border/50 text-ink border border-border font-medium active:translate-y-[1px]',
+  outline: 'border border-border hover:bg-surface-sunken text-ink hover:border-ink-secondary/50 font-medium active:translate-y-[1px]',
+  teal: 'bg-teal text-white hover:bg-teal/90 border border-teal/40 shadow-sm font-semibold active:translate-y-[1px]',
+  danger: 'bg-danger hover:bg-danger/90 text-white shadow-sm font-semibold active:translate-y-[1px]',
+  ghost: 'hover:bg-surface-sunken text-ink-secondary hover:text-ink font-medium'
 };
 
 const sizes = {
-  sm: 'px-3 py-1.5 text-xs rounded-sm',
+  sm: 'px-3 py-1.5 text-xs rounded-md',
   md: 'px-4 py-2 text-sm rounded-md',
   lg: 'px-6 py-3 text-base rounded-lg'
 };

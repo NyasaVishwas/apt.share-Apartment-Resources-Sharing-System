@@ -1,44 +1,39 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axiosClient from '../../lib/axiosClient';
-import { useAuth } from '../../app/providers/AuthProvider';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { AuthPageHeader } from '../../components/navigation/AuthPageHeader';
-import { ShieldCheck, MailCheck } from 'lucide-react';
+import { ShieldCheck, Lock } from 'lucide-react';
 
-export const VerifyEmailPage = () => {
-  const location = useLocation();
-  const email = location.state?.email || '';
-  const [code, setCode] = useState('');
+export const ResetPasswordPage = () => {
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleVerify = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setMessage('');
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const res = await axiosClient.post('/auth/verify-otp', { email, code });
-      login(res.data.user, res.data.accessToken);
-      navigate('/onboarding');
+      await axiosClient.post('/auth/reset-password', { password });
+      setMessage('Password updated successfully. Redirecting to login...');
+      setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
-      setError(err.message || 'OTP verification failed.');
+      setError(err.message || 'Failed to reset password.');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleResend = async () => {
-    try {
-      await axiosClient.post('/auth/resend-otp', { email });
-      setMessage('A new 6-digit OTP code has been sent to your email.');
-    } catch (err) {
-      setError(err.message || 'Failed to resend OTP.');
     }
   };
 
@@ -46,18 +41,17 @@ export const VerifyEmailPage = () => {
     <div className="min-h-screen bg-bg text-ink flex flex-col font-sans selection:bg-amber selection:text-ink">
       <AuthPageHeader />
 
-      {/* Main Split-Screen Container */}
       <main className="flex-1 grid lg:grid-cols-12 w-full max-w-7xl mx-auto">
-        {/* Form Panel (Tightened vertical spacing, centered as a unit) */}
+        {/* Form Panel */}
         <div className="lg:col-span-6 flex flex-col justify-center px-6 lg:px-12 py-8 my-auto">
           <div className="max-w-md w-full mx-auto space-y-5">
             <div className="space-y-1.5">
               <div className="text-xs font-mono uppercase tracking-widest text-ink-secondary">
-                RESIDENT IDENTITY VERIFICATION
+                CREDENTIAL UPDATE
               </div>
-              <h1 className="text-3xl font-serif font-bold text-ink">Verify Security Code</h1>
+              <h1 className="text-3xl font-serif font-bold text-ink">Set New Password</h1>
               <p className="text-sm text-ink-secondary">
-                Enter the 6-digit OTP code sent to <span className="font-mono font-bold text-ink">{email || 'your registered email'}</span>
+                Choose a new secure password for your society resident account
               </p>
             </div>
 
@@ -73,34 +67,34 @@ export const VerifyEmailPage = () => {
                 </div>
               )}
 
-              <form onSubmit={handleVerify} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <Input
-                  label="6-Digit Verification OTP"
-                  type="text"
-                  maxLength={6}
-                  placeholder="123456"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                  className="text-center tracking-widest text-xl font-mono"
+                  label="New Password"
+                  type="password"
+                  placeholder="Minimum 6 characters"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <Input
+                  label="Confirm New Password"
+                  type="password"
+                  placeholder="Re-enter password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                 />
 
                 <Button type="submit" loading={loading} variant="primary" className="w-full font-mono mt-2">
-                  VERIFY CODE & CONTINUE
+                  UPDATE PASSWORD
                 </Button>
               </form>
-
-              <div className="pt-4 border-t border-border text-center">
-                <button onClick={handleResend} type="button" className="text-xs font-mono text-amber hover:underline font-bold">
-                  Didn't receive code? Resend OTP Code
-                </button>
-              </div>
             </div>
 
             <p className="text-center text-xs font-mono text-ink-secondary">
-              Need to use a different email?{' '}
-              <Link to="/register" className="text-amber hover:underline font-bold">
-                Return to Registration
+              Remembered your password?{' '}
+              <Link to="/login" className="text-amber hover:underline font-bold">
+                Return to Sign In
               </Link>
             </p>
           </div>
@@ -114,32 +108,32 @@ export const VerifyEmailPage = () => {
             {/* Stack Layer 1 */}
             <div className="absolute inset-0 bg-surface/70 border border-border rounded-lg shadow-sm rotate-[1.5deg] scale-[0.98] translate-y-1.5 pointer-events-none -z-10"></div>
 
-            {/* Main Front Ticket Card */}
+            {/* Front Card */}
             <div className="ledger-ticket p-6 space-y-4 shadow-ticket bg-surface w-full relative">
               <div className="flex items-center space-x-3 pb-3 border-b border-border">
                 <div className="p-3 rounded bg-teal/10 text-teal border border-teal/30">
-                  <MailCheck className="w-6 h-6" />
+                  <Lock className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="font-serif font-bold text-base text-ink">Verified Society Emails Only</h3>
-                  <p className="text-xs text-ink-secondary font-mono">Ensures all lending participants are real neighbors</p>
+                  <h3 className="font-serif font-bold text-base text-ink">Password Security Standard</h3>
+                  <p className="text-xs text-ink-secondary font-mono">Bcrypt salted password encryption</p>
                 </div>
               </div>
               <p className="text-xs text-ink-secondary leading-relaxed">
-                By verifying your OTP code, you validate your residency standing on the community ledger, unlocking instant QR borrowing and deposit escrow holds.
+                Updating your credentials revokes previous session tokens instantly to maintain total ledger security.
               </p>
 
               <div className="ticket-divider"></div>
 
               <div className="bg-surface-sunken p-3.5 rounded border border-border font-mono text-xs flex items-center justify-between">
-                <span className="text-ink-secondary uppercase text-[10px] font-bold">SECURITY ENCRYPTION</span>
-                <span className="font-bold text-teal text-xs font-serif">VERIFIED & ENCRYPTED</span>
+                <span className="text-ink-secondary uppercase text-[10px] font-bold">ENCRYPTION STATUS</span>
+                <span className="font-bold text-teal text-xs">ENCRYPTED & VERIFIED</span>
               </div>
             </div>
 
             <p className="text-[11px] font-mono text-ink-secondary text-center mt-4 flex items-center justify-center space-x-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-teal" />
-              <span>Identity details masked pre-login — full profiles visible to verified members only.</span>
+              <span>Identity details masked pre-login — visible to verified residents only.</span>
             </p>
           </div>
         </div>

@@ -14,7 +14,7 @@ export const ItemFormPage = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [brand, setBrand] = useState('');
   const [condition, setCondition] = useState('good');
-  const [securityDeposit, setSecurityDeposit] = useState('1000');
+  const [securityDeposit, setSecurityDeposit] = useState('1200');
   const [rentalFeePerDay, setRentalFeePerDay] = useState('0');
   const [maxBorrowDurationDays, setMaxBorrowDurationDays] = useState('7');
   const [pickupInstructions, setPickupInstructions] = useState('');
@@ -56,50 +56,55 @@ export const ItemFormPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bg text-text-primary flex flex-col">
-      <header className="border-b border-border bg-surface sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/browse" className="inline-flex items-center space-x-2 text-sm text-text-secondary hover:text-text-primary">
+    <div className="min-h-screen bg-bg text-ink flex flex-col font-sans selection:bg-amber selection:text-ink">
+      <header className="border-b border-border bg-surface sticky top-0 z-30 shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between font-mono">
+          <Link to="/browse" className="inline-flex items-center space-x-2 text-xs text-ink-secondary hover:text-ink">
             <ArrowLeft className="w-4 h-4" />
-            <span>Cancel</span>
+            <span>CANCEL</span>
           </Link>
-          <span className="font-bold text-base">List a Resource</span>
+          <span className="font-bold text-sm text-ink">LIST RESOURCE IN BUILDING LEDGER</span>
           <div></div>
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-6 py-8 flex-1 w-full">
-        <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold tracking-tight">Share an Item with Neighbors</h1>
-          <p className="text-sm text-text-secondary mt-1">
-            List your unused tools or equipment safely under community trust rules
+      <main className="max-w-2xl mx-auto px-6 py-8 flex-1 w-full space-y-6">
+        <div className="border-b border-border pb-4">
+          <div className="text-xs font-mono uppercase tracking-wider text-ink-secondary mb-1">
+            CATALOG ENTRY FORM
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-ink tracking-tight">
+            Share an Item with Neighbors
+          </h1>
+          <p className="text-sm text-ink-secondary mt-1">
+            List your unused tools or equipment safely under community escrow rules
           </p>
         </div>
 
-        <Card elevated className="p-6">
+        <div className="ledger-ticket p-6 shadow-sm space-y-6">
           {error && (
-            <div className="mb-4 p-3 rounded bg-danger/10 border border-danger/20 text-danger text-sm">
+            <div className="p-3 rounded bg-danger/10 border border-danger/30 text-danger text-xs font-mono">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 font-sans">
             <Input
               label="Item Title"
-              placeholder="e.g. Bosch Cordless Power Drill"
+              placeholder="e.g. Bosch Cordless Power Drill GSB 18V"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
             />
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-text-secondary">
+              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-ink-secondary">
                 Category
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3.5 py-2 text-sm bg-surface border border-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                className="w-full px-3.5 py-2 text-sm bg-surface border border-border rounded-md text-ink font-mono focus:outline-none focus:ring-2 focus:ring-amber/50 focus:border-amber"
               >
                 {CATEGORIES.filter((c) => c.id !== 'all').map((cat) => (
                   <option key={cat.id} value={cat.id}>
@@ -110,15 +115,15 @@ export const ItemFormPage = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-text-secondary">
+              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-ink-secondary">
                 Description
               </label>
               <textarea
                 rows={3}
-                placeholder="Describe condition, specifications, and what is included..."
+                placeholder="Describe condition, accessories included, and usage tips..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-3.5 py-2 text-sm bg-surface border border-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                className="w-full px-3.5 py-2 text-sm bg-surface border border-border rounded-md text-ink placeholder:text-ink-secondary/50 focus:outline-none focus:ring-2 focus:ring-amber/50 focus:border-amber"
                 required
               />
             </div>
@@ -128,29 +133,29 @@ export const ItemFormPage = () => {
               placeholder="https://images.unsplash.com/..."
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
-              helperText="Provide a direct image URL or leave blank for a default photo"
+              helperText="Provide a direct photo URL or leave empty for a default image"
             />
 
             <div className="grid grid-cols-2 gap-4">
               <Input
-                label="Brand"
-                placeholder="e.g. Bosch, Kärcher"
+                label="Brand / Make"
+                placeholder="e.g. Bosch, Kärcher, Decathlon"
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
               />
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-text-secondary">
+                <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-ink-secondary">
                   Item Condition
                 </label>
                 <select
                   value={condition}
                   onChange={(e) => setCondition(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-surface border border-border rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                  className="w-full px-3.5 py-2 text-sm bg-surface border border-border rounded-md text-ink font-mono focus:outline-none focus:ring-2 focus:ring-amber/50 focus:border-amber"
                 >
                   <option value="new">Brand New</option>
                   <option value="like_new">Like New</option>
                   <option value="good">Good Condition</option>
-                  <option value="fair">Fair</option>
+                  <option value="fair">Fair Condition</option>
                   <option value="worn">Worn</option>
                 </select>
               </div>
@@ -158,10 +163,11 @@ export const ItemFormPage = () => {
 
             <div className="grid grid-cols-3 gap-4 pt-2">
               <Input
-                label="Security Deposit (₹)"
+                label="Security Deposit Hold (₹)"
                 type="number"
                 value={securityDeposit}
                 onChange={(e) => setSecurityDeposit(e.target.value)}
+                placeholder="e.g., 1200"
                 required
               />
               <Input
@@ -169,10 +175,11 @@ export const ItemFormPage = () => {
                 type="number"
                 value={rentalFeePerDay}
                 onChange={(e) => setRentalFeePerDay(e.target.value)}
-                helperText="0 for Free"
+                placeholder="0 for Free"
+                helperText="0 for Free Borrow"
               />
               <Input
-                label="Max Days"
+                label="Max Duration (Days)"
                 type="number"
                 value={maxBorrowDurationDays}
                 onChange={(e) => setMaxBorrowDurationDays(e.target.value)}
@@ -181,23 +188,23 @@ export const ItemFormPage = () => {
 
             <Input
               label="Pickup Instructions"
-              placeholder="e.g. Pickup at Tower A 302 after 6 PM"
+              placeholder="e.g. Pick up at Flat B-402 after 6 PM"
               value={pickupInstructions}
               onChange={(e) => setPickupInstructions(e.target.value)}
             />
 
             <Input
               label="Usage Guidelines"
-              placeholder="e.g. Clean after use, keep away from rain"
+              placeholder="e.g. Clean and dry complete hose set before returning"
               value={usageInstructions}
               onChange={(e) => setUsageInstructions(e.target.value)}
             />
 
-            <Button type="submit" loading={loading} className="w-full mt-4">
-              Publish Listing to Society
+            <Button type="submit" loading={loading} variant="primary" className="w-full mt-4 font-mono">
+              PUBLISH LISTING TO BUILDING LEDGER
             </Button>
           </form>
-        </Card>
+        </div>
       </main>
     </div>
   );

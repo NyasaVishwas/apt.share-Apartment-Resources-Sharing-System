@@ -18,7 +18,7 @@ import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
-import { ArrowLeft, ShieldCheck, CheckCircle2, AlertTriangle, Star } from 'lucide-react';
+import { ArrowLeft, ShieldCheck, CheckCircle2, AlertTriangle, Star, QrCode } from 'lucide-react';
 
 export const BookingDetailPage = () => {
   const { bookingId } = useParams();
@@ -141,17 +141,17 @@ export const BookingDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-bg flex items-center justify-center text-text-secondary">
-        Loading booking details & timeline...
+      <div className="min-h-screen bg-bg flex items-center justify-center font-mono text-ink-secondary">
+        Loading ledger ticket record...
       </div>
     );
   }
 
   if (!booking) {
     return (
-      <div className="min-h-screen bg-bg p-8 text-center">
-        <h2 className="text-xl font-bold">Booking Record Not Found</h2>
-        <Link to="/bookings" className="text-accent underline mt-4 inline-block">
+      <div className="min-h-screen bg-bg p-8 text-center font-sans">
+        <h2 className="text-xl font-serif font-bold text-ink">Booking Record Not Found</h2>
+        <Link to="/bookings" className="text-amber underline mt-4 inline-block font-mono text-sm">
           Return to Bookings List
         </Link>
       </div>
@@ -162,83 +162,118 @@ export const BookingDetailPage = () => {
   const item = booking.listingId;
 
   return (
-    <div className="min-h-screen bg-bg text-text-primary flex flex-col">
-      <header className="border-b border-border bg-surface sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/bookings" className="inline-flex items-center space-x-2 text-sm text-text-secondary hover:text-text-primary">
+    <div className="min-h-screen bg-bg text-ink flex flex-col font-sans selection:bg-amber selection:text-ink">
+      <header className="border-b border-border bg-surface sticky top-0 z-30 shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between font-mono">
+          <Link to="/bookings" className="inline-flex items-center space-x-2 text-xs text-ink-secondary hover:text-ink">
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Bookings</span>
+            <span>RETURN TO BOOKINGS</span>
           </Link>
-          <span className="font-bold text-base">Booking #{booking._id.slice(-6)}</span>
+          <span className="font-bold text-sm text-ink">LEDGER RECORD: #{booking._id.slice(-6).toUpperCase()}</span>
           <div></div>
         </div>
       </header>
 
       <main className="max-w-4xl mx-auto px-6 py-8 flex-1 w-full space-y-6">
-        {error && <div className="p-4 rounded-md bg-danger/10 border border-danger/20 text-danger text-sm">{error}</div>}
-        {message && <div className="p-4 rounded-md bg-success/10 border border-success/20 text-success text-sm">{message}</div>}
+        {error && <div className="p-4 rounded bg-danger/10 border border-danger/30 text-danger text-sm font-mono">{error}</div>}
+        {message && <div className="p-4 rounded bg-teal/10 border border-teal/30 text-teal text-sm font-mono">{message}</div>}
 
-        {/* Timeline Indicator */}
-        <Card className="p-6">
+        {/* Timeline Checkpoint Indicator */}
+        <div className="bg-surface border border-border p-5 rounded-lg shadow-sm">
           <BookingTimeline status={booking.status} />
-        </Card>
+        </div>
 
-        {/* Item Header & Summary */}
-        <Card className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center space-x-4">
-            <img
-              src={item?.images?.[0]?.url || 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&auto=format&fit=crop&q=80'}
-              alt={item?.title}
-              className="w-20 h-20 rounded-md object-cover bg-bg-elevated border border-border"
-            />
-            <div>
-              <h2 className="font-bold text-lg">{item?.title}</h2>
-              <p className="text-xs text-text-secondary mt-0.5">
-                Dates: {new Date(booking.startDate).toLocaleDateString()} — {new Date(booking.endDate).toLocaleDateString()}
-              </p>
-              <div className="flex items-center space-x-3 mt-2 text-xs">
-                <span className="font-semibold text-text-primary">Rental Fee: ₹{booking.rentalFeeAmount}</span>
-                <span className="text-text-secondary">•</span>
-                <span className="font-semibold text-accent">Deposit Hold: ₹{booking.depositAmount} ({booking.depositStatus})</span>
+        {/* Master Stamped Booking Ticket */}
+        <div className="ledger-ticket p-6 shadow-ticket space-y-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-border">
+            <div className="flex items-center space-x-4">
+              <img
+                src={item?.images?.[0]?.url || 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&auto=format&fit=crop&q=80'}
+                alt={item?.title}
+                className="w-20 h-20 rounded-md object-cover bg-surface-sunken border border-border shrink-0"
+              />
+              <div className="space-y-1">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-ink-secondary">
+                  CHECK-OUT ITEM
+                </div>
+                <h2 className="font-serif font-bold text-xl text-ink leading-tight">{item?.title}</h2>
+                <p className="text-xs font-mono text-ink-secondary">
+                  RESERVATION DATES: {new Date(booking.startDate).toLocaleDateString()} — {new Date(booking.endDate).toLocaleDateString()}
+                </p>
               </div>
+            </div>
+
+            <div className="shrink-0">
+              <span className={`stamp-badge ${
+                booking.status === 'completed' 
+                  ? 'stamp-badge-teal' 
+                  : booking.status === 'active' 
+                  ? 'stamp-badge-amber' 
+                  : 'stamp-badge-ink'
+              } animate-stamp-thud text-sm`}>
+                {booking.status.toUpperCase()}
+              </span>
+            </div>
+          </div>
+
+          {/* Ledger Financial & Route Summary Table */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded bg-surface-sunken border border-border font-mono text-xs">
+            <div>
+              <span className="text-ink-secondary uppercase block text-[10px]">Rental Fee</span>
+              <span className="font-bold text-ink text-sm">₹{booking.rentalFeeAmount}</span>
+            </div>
+
+            <div>
+              <span className="text-ink-secondary uppercase block text-[10px]">Deposit Hold</span>
+              <span className="font-bold text-amber text-sm">₹{booking.depositAmount}</span>
+            </div>
+
+            <div>
+              <span className="text-ink-secondary uppercase block text-[10px]">Escrow Status</span>
+              <span className="font-bold text-teal text-sm uppercase">{booking.depositStatus}</span>
+            </div>
+
+            <div>
+              <span className="text-ink-secondary uppercase block text-[10px]">Handoff Mode</span>
+              <span className="font-bold text-ink text-sm">QR DOORSTEP</span>
             </div>
           </div>
 
           {/* Action CTAs */}
-          <div className="flex flex-col space-y-2 w-full sm:w-auto">
+          <div className="flex flex-wrap items-center gap-3 pt-2">
             {booking.status === 'completed' && (
-              <Button size="sm" onClick={() => setShowRatingModal(true)} className="flex items-center space-x-1">
-                <Star className="w-4 h-4 text-warning mr-1 fill-current" />
-                <span>Leave Review</span>
+              <Button size="sm" variant="teal" onClick={() => setShowRatingModal(true)} className="flex items-center space-x-1">
+                <Star className="w-4 h-4 mr-1 fill-current" />
+                <span>LEAVE NEIGHBOR REVIEW</span>
               </Button>
             )}
 
             {['active', 'completed'].includes(booking.status) && (
-              <Button size="sm" variant="outline" onClick={() => setShowDisputeModal(true)} className="text-danger border-danger/30 hover:bg-danger/10">
+              <Button size="sm" variant="outline" onClick={() => setShowDisputeModal(true)} className="text-danger border-danger/40 hover:bg-danger/10">
                 <AlertTriangle className="w-4 h-4 mr-1 text-danger" />
-                <span>Report Damage</span>
+                <span>REPORT DAMAGE INCIDENT</span>
               </Button>
             )}
           </div>
-        </Card>
+        </div>
 
         {/* Role Action Center */}
         {booking.status === 'pending' && isOwner && (
-          <Card elevated className="p-6 border-accent/40 text-center space-y-4">
-            <h3 className="font-semibold text-base">Pending Borrower Request</h3>
-            <p className="text-xs text-text-secondary max-w-md mx-auto">
-              <span className="font-semibold text-text-primary">{booking.borrowerId?.name}</span> (Trust Score {booking.borrowerId?.trustScore}/100) has requested to borrow this item.
+          <div className="ledger-ticket-sunken p-6 text-center space-y-4 border-amber/50">
+            <h3 className="font-serif font-bold text-lg text-ink">Pending Borrower Request</h3>
+            <p className="text-xs text-ink-secondary max-w-md mx-auto">
+              <span className="font-bold text-ink">{booking.borrowerId?.name}</span> (Trust Score {booking.borrowerId?.trustScore}/100) has submitted a checkout tag for this item.
               {booking.requestMessage && ` Message: "${booking.requestMessage}"`}
             </p>
             <div className="flex justify-center space-x-3 pt-2">
-              <Button loading={actionLoading} onClick={handleApprove} variant="primary">
+              <Button loading={actionLoading} onClick={handleApprove} variant="primary" size="md">
                 Approve Request & Issue QR Code
               </Button>
-              <Button loading={actionLoading} onClick={handleDecline} variant="outline">
+              <Button loading={actionLoading} onClick={handleDecline} variant="outline" size="md">
                 Decline Request
               </Button>
             </div>
-          </Card>
+          </div>
         )}
 
         {/* QR Handoff Container */}
@@ -252,15 +287,15 @@ export const BookingDetailPage = () => {
           />
         )}
 
-        {/* Completed State Card */}
+        {/* Completed State Ticket */}
         {booking.status === 'completed' && (
-          <Card className="p-6 text-center space-y-3 bg-success/5 border-success/30">
-            <CheckCircle2 className="w-10 h-10 text-success mx-auto" />
-            <h3 className="font-bold text-base text-success">Booking Successfully Completed!</h3>
-            <p className="text-xs text-text-secondary max-w-sm mx-auto">
-              The item was safely returned and confirmed by the owner. Security deposit hold of ₹{booking.depositAmount} has been released.
+          <div className="ledger-ticket p-6 text-center space-y-3 bg-teal/5 border-teal/30">
+            <CheckCircle2 className="w-10 h-10 text-teal mx-auto" />
+            <h3 className="font-serif font-bold text-xl text-teal">Booking Successfully Completed!</h3>
+            <p className="text-xs text-ink-secondary max-w-sm mx-auto font-mono">
+              The item was safely returned and verified. Escrow security deposit hold of ₹{booking.depositAmount} has been released back.
             </p>
-          </Card>
+          </div>
         )}
       </main>
 
@@ -295,3 +330,4 @@ export const BookingDetailPage = () => {
     </div>
   );
 };
+

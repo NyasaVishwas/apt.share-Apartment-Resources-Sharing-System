@@ -24,7 +24,7 @@ import {
   Bell,
   Sparkles,
   BarChart3,
-  ShieldAlert
+  QrCode
 } from 'lucide-react';
 
 export const DashboardPage = () => {
@@ -65,69 +65,70 @@ export const DashboardPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bg text-text-primary flex flex-col">
+    <div className="min-h-screen bg-bg text-ink flex flex-col font-sans selection:bg-amber selection:text-ink">
       {/* Top Application Header */}
-      <header className="border-b border-border bg-surface sticky top-0 z-30">
+      <header className="border-b border-border bg-surface sticky top-0 z-30 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-4">
             <Link to="/dashboard" className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-md bg-accent text-white font-bold text-lg flex items-center justify-center">
+              <div className="w-8 h-8 rounded bg-ink text-bg font-serif font-bold text-lg flex items-center justify-center shadow-sm">
                 a
               </div>
-              <span className="font-bold text-lg tracking-tight">apt.share</span>
+              <span className="font-serif font-bold text-lg tracking-tight text-ink">apt.share</span>
             </Link>
 
             {activeCommunity && (
-              <div className="flex items-center space-x-2 px-3 py-1 bg-bg-elevated rounded-md border border-border text-xs">
-                <Building2 className="w-3.5 h-3.5 text-accent" />
-                <span className="font-medium">{activeCommunity.name}</span>
+              <div className="flex items-center space-x-2 px-3 py-1 bg-surface-sunken rounded border border-border text-xs font-mono">
+                <Building2 className="w-3.5 h-3.5 text-amber" />
+                <span className="font-medium text-ink truncate max-w-[180px] sm:max-w-none">{activeCommunity.name}</span>
+                <span className="text-[10px] text-teal font-bold uppercase border-l border-border pl-2">LEDGER ACTIVE</span>
               </div>
             )}
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-3">
             {user?.role === 'super_admin' && (
               <Link to="/platform/dashboard">
-                <Button variant="outline" size="sm" className="text-xs">
+                <Button variant="outline" size="sm" className="text-xs font-mono">
                   Super Admin
                 </Button>
               </Link>
             )}
 
-            <Link to="/feed" className="p-2 rounded-md hover:bg-bg-elevated text-text-secondary hover:text-text-primary transition-colors" title="Feed">
-              <Sparkles className="w-5 h-5" />
+            <Link to="/feed" className="p-2 rounded hover:bg-surface-sunken text-ink-secondary hover:text-ink transition-colors" title="Society Feed">
+              <Sparkles className="w-4 h-4" />
             </Link>
 
-            <Link to="/analytics" className="p-2 rounded-md hover:bg-bg-elevated text-text-secondary hover:text-text-primary transition-colors" title="Analytics">
-              <BarChart3 className="w-5 h-5" />
+            <Link to="/analytics" className="p-2 rounded hover:bg-surface-sunken text-ink-secondary hover:text-ink transition-colors" title="Analytics">
+              <BarChart3 className="w-4 h-4" />
             </Link>
 
-            <Link to="/chat" className="p-2 rounded-md hover:bg-bg-elevated text-text-secondary hover:text-text-primary transition-colors relative" title="Messages">
-              <MessageSquare className="w-5 h-5" />
+            <Link to="/chat" className="p-2 rounded hover:bg-surface-sunken text-ink-secondary hover:text-ink transition-colors relative" title="Messages">
+              <MessageSquare className="w-4 h-4" />
             </Link>
 
-            <Link to="/notifications" className="p-2 rounded-md hover:bg-bg-elevated text-text-secondary hover:text-text-primary transition-colors relative" title="Notifications">
-              <Bell className="w-5 h-5" />
+            <Link to="/notifications" className="p-2 rounded hover:bg-surface-sunken text-ink-secondary hover:text-ink transition-colors relative" title="Notifications">
+              <Bell className="w-4 h-4" />
               {unreadNotificationsCount > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-accent animate-pulse" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber animate-pulse" />
               )}
             </Link>
 
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-md hover:bg-bg-elevated text-text-secondary hover:text-text-primary transition-colors"
+              className="p-2 rounded hover:bg-surface-sunken text-ink-secondary hover:text-ink transition-colors"
               title="Toggle theme"
             >
-              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
 
             <div className="flex items-center space-x-3 border-l border-border pl-3">
-              <div className="text-right hidden sm:block">
-                <p className="text-xs font-semibold text-text-primary">{user?.name}</p>
-                <p className="text-[10px] text-text-secondary">{user?.email}</p>
+              <div className="text-right hidden sm:block font-mono">
+                <p className="text-xs font-bold text-ink leading-none">{user?.name}</p>
+                <p className="text-[10px] text-ink-secondary mt-0.5">{user?.email}</p>
               </div>
               <Button variant="ghost" size="sm" onClick={handleLogout} title="Logout">
-                <LogOut className="w-4 h-4" />
+                <LogOut className="w-4 h-4 text-ink-secondary hover:text-danger" />
               </Button>
             </div>
           </div>
@@ -136,117 +137,167 @@ export const DashboardPage = () => {
 
       {/* Main Content Body */}
       <main className="max-w-7xl mx-auto px-6 py-8 flex-1 w-full space-y-8">
-        {/* Resident Greeting & Trust Badge Bar */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-surface border border-border p-6 rounded-lg shadow-sm">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Welcome back, {user?.name}! 👋</h1>
-            <p className="text-sm text-text-secondary mt-1">
-              Active resident in <span className="font-medium text-text-primary">{activeCommunity?.name || 'Your Community'}</span>
+        {/* Resident Greeting & Stamped Trust Ticket Bar */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-surface border border-border p-6 rounded-lg shadow-sm relative overflow-hidden">
+          <div className="space-y-1">
+            <div className="inline-flex items-center space-x-2 text-xs font-mono text-ink-secondary uppercase tracking-wider">
+              <span>RESIDENT CHECK-IN</span>
+              <span>•</span>
+              <span className="text-teal font-semibold">VERIFIED NEIGHBOR</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight text-ink">
+              Welcome back, {user?.name}
+            </h1>
+            <p className="text-sm text-ink-secondary">
+              Active ledger member in <span className="font-semibold text-ink">{activeCommunity?.name || 'Your Community'}</span>
             </p>
           </div>
 
           <Link to={`/profile/${user?._id}`}>
-            <div className="flex items-center space-x-4 bg-bg-elevated p-3 rounded-lg border border-border hover:border-accent transition-colors">
-              <div className="w-10 h-10 rounded-full bg-accent/10 text-accent flex items-center justify-center font-bold">
-                <Award className="w-6 h-6" />
+            <div className="ledger-ticket-sunken p-4 flex items-center gap-4 hover:border-ink-secondary/40 transition-colors">
+              <div className="w-10 h-10 rounded bg-teal/10 border border-teal/30 text-teal flex items-center justify-center font-bold shrink-0">
+                <Award className="w-5 h-5" />
               </div>
-              <div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-xs uppercase font-semibold text-text-secondary">Trust Score</span>
-                  <Badge variant="success">{user?.trustScore || 80}/100</Badge>
+              <div className="font-mono">
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] uppercase tracking-wider text-ink-secondary">TRUST SCORE</span>
+                  <span className="stamp-badge stamp-badge-teal text-[10px] py-0.5 px-1.5">
+                    VERIFIED
+                  </span>
                 </div>
-                <p className="text-xs text-text-secondary mt-0.5">Verified Neighbor Profile</p>
+                <div className="text-xl font-bold font-serif text-ink mt-0.5">
+                  {user?.trustScore || 80} <span className="text-xs font-mono font-normal text-ink-secondary">/ 100</span>
+                </div>
               </div>
             </div>
           </Link>
         </div>
 
-        {/* Quick Action Hub Cards */}
+        {/* Quick Action Hub Cards — restyled with ledger receipt figures */}
         <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
           <Link to="/browse">
-            <Card elevated className="p-4 flex items-center space-x-4 cursor-pointer hover:border-accent group">
-              <div className="p-3 rounded-lg bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-colors">
-                <Search className="w-6 h-6" />
+            <div className="bg-surface border border-border rounded-lg p-5 hover:border-amber transition-all cursor-pointer group shadow-sm">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2.5 rounded bg-amber/10 border border-amber/30 text-ink group-hover:bg-amber transition-colors">
+                  <Search className="w-5 h-5" />
+                </div>
+                <span className="font-mono text-xs text-ink-secondary">CATALOG</span>
               </div>
-              <div>
-                <h4 className="font-semibold text-sm">Browse Items</h4>
-                <p className="text-xs text-text-secondary">Discover tools & gear</p>
-              </div>
-            </Card>
+              <h4 className="font-serif font-bold text-base text-ink">Browse Items</h4>
+              <p className="text-xs text-ink-secondary mt-1">Discover available tools & gear</p>
+            </div>
           </Link>
 
           <Link to="/items/new">
-            <Card elevated className="p-4 flex items-center space-x-4 cursor-pointer hover:border-accent group">
-              <div className="p-3 rounded-lg bg-success/10 text-success group-hover:bg-success group-hover:text-white transition-colors">
-                <PlusCircle className="w-6 h-6" />
+            <div className="bg-surface border border-border rounded-lg p-5 hover:border-teal transition-all cursor-pointer group shadow-sm">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2.5 rounded bg-teal/10 border border-teal/30 text-teal group-hover:bg-teal group-hover:text-white transition-colors">
+                  <PlusCircle className="w-5 h-5" />
+                </div>
+                <span className="font-mono text-xs text-ink-secondary">LISTING</span>
               </div>
-              <div>
-                <h4 className="font-semibold text-sm">List an Item</h4>
-                <p className="text-xs text-text-secondary">Share with neighbors</p>
-              </div>
-            </Card>
+              <h4 className="font-serif font-bold text-base text-ink">List an Item</h4>
+              <p className="text-xs text-ink-secondary mt-1">Share gear with your neighbors</p>
+            </div>
           </Link>
 
           <Link to="/bookings">
-            <Card elevated className="p-4 flex items-center space-x-4 cursor-pointer hover:border-accent group">
-              <div className="p-3 rounded-lg bg-warning/10 text-warning group-hover:bg-warning group-hover:text-white transition-colors">
-                <Calendar className="w-6 h-6" />
+            <div className="bg-surface border border-border rounded-lg p-5 hover:border-amber transition-all cursor-pointer group shadow-sm">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2.5 rounded bg-amber/10 border border-amber/30 text-amber group-hover:bg-amber group-hover:text-ink transition-colors">
+                  <Calendar className="w-5 h-5" />
+                </div>
+                <span className="font-mono text-xs text-ink-secondary">LEDGER</span>
               </div>
-              <div>
-                <h4 className="font-semibold text-sm">My Bookings</h4>
-                <p className="text-xs text-text-secondary">Track active borrows</p>
-              </div>
-            </Card>
+              <h4 className="font-serif font-bold text-base text-ink">My Bookings</h4>
+              <p className="text-xs text-ink-secondary mt-1">Track active pickup & returns</p>
+            </div>
           </Link>
 
           <Link to="/feed">
-            <Card elevated className="p-4 flex items-center space-x-4 cursor-pointer hover:border-accent group">
-              <div className="p-3 rounded-lg bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-colors">
-                <Sparkles className="w-6 h-6" />
+            <div className="bg-surface border border-border rounded-lg p-5 hover:border-ink transition-all cursor-pointer group shadow-sm">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2.5 rounded bg-surface-sunken border border-border text-ink group-hover:bg-ink group-hover:text-bg transition-colors">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <span className="font-mono text-xs text-ink-secondary">SOCIETY</span>
               </div>
-              <div>
-                <h4 className="font-semibold text-sm">Society Feed</h4>
-                <p className="text-xs text-text-secondary">Announcements & Top Lenders</p>
-              </div>
-            </Card>
+              <h4 className="font-serif font-bold text-base text-ink">Community Feed</h4>
+              <p className="text-xs text-ink-secondary mt-1">Announcements & top lenders</p>
+            </div>
           </Link>
         </div>
 
         {/* Recent Community Listings Section */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold">Recently Listed in {activeCommunity?.name}</h2>
-            <Link to="/browse" className="text-xs font-semibold text-accent hover:underline flex items-center">
-              View All Items <ArrowRight className="w-3.5 h-3.5 ml-1" />
+        <div className="space-y-4">
+          <div className="flex items-center justify-between border-b border-border pb-3">
+            <div className="flex items-center gap-2">
+              <h2 className="font-serif font-bold text-xl text-ink">Recently Checked into {activeCommunity?.name}</h2>
+            </div>
+            <Link to="/browse" className="text-xs font-mono font-bold text-amber hover:underline flex items-center gap-1">
+              VIEW FULL CATALOG <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
-            {recentListings.map((item) => (
-              <Link key={item._id} to={`/items/${item._id}`}>
-                <Card elevated className="p-4 space-y-2 hover:border-accent">
-                  <img
-                    src={item.images?.[0]?.url || 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&auto=format&fit=crop&q=80'}
-                    alt={item.title}
-                    className="w-full h-32 object-cover rounded-md bg-bg-elevated"
-                  />
-                  <h3 className="font-semibold text-sm line-clamp-1">{item.title}</h3>
-                  <div className="flex justify-between text-xs text-text-secondary">
-                    <span className="capitalize">{item.category?.replace('_', ' ')}</span>
-                    <span className="font-bold text-accent">
-                      {item.rentalFeePerDay === 0 ? 'Free' : `₹${item.rentalFeePerDay}/day`}
-                    </span>
+          {recentListings.length === 0 ? (
+            /* Plain direct empty state */
+            <div className="ledger-ticket-sunken p-8 text-center space-y-3 my-4">
+              <Package className="w-10 h-10 text-ink-secondary mx-auto opacity-60" />
+              <h3 className="font-serif font-bold text-lg text-ink">You haven't borrowed anything yet</h3>
+              <p className="text-sm text-ink-secondary max-w-md mx-auto">
+                Browse what your neighbors are sharing right now in {activeCommunity?.name || 'your building'} or list your rarely-used tools.
+              </p>
+              <div className="pt-2 flex items-center justify-center gap-3">
+                <Link to="/browse">
+                  <Button variant="primary" size="sm">Browse Neighborhood Catalog</Button>
+                </Link>
+                <Link to="/items/new">
+                  <Button variant="outline" size="sm">List Your First Item</Button>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-5">
+              {recentListings.map((item) => (
+                <Link key={item._id} to={`/items/${item._id}`}>
+                  <div className="ledger-ticket overflow-hidden group hover:border-amber transition-all">
+                    <div className="aspect-[4/3] bg-surface-sunken relative overflow-hidden border-b border-border">
+                      <img
+                        src={item.images?.[0]?.url || 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&auto=format&fit=crop&q=80'}
+                        alt={item.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                      />
+                      <div className="absolute top-2 right-2">
+                        <span className="stamp-badge stamp-badge-teal text-[9px] py-0.5 px-1 bg-surface/90">
+                          AVAILABLE
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="p-4 space-y-2">
+                      <h3 className="font-serif font-bold text-sm text-ink line-clamp-1 group-hover:text-amber transition-colors">
+                        {item.title}
+                      </h3>
+
+                      <div className="flex items-center justify-between text-xs font-mono pt-1 border-t border-border/60 text-ink-secondary">
+                        <span className="capitalize">{item.category?.replace('_', ' ')}</span>
+                        <span className="font-bold text-ink">
+                          {item.rentalFeePerDay === 0 ? 'FREE BORROW' : `₹${item.rentalFeePerDay}/day`}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                </Card>
-              </Link>
-            ))}
-          </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </main>
 
-      <footer className="border-t border-border py-6 text-center text-xs text-text-secondary">
-        <p>apt.share v1.0 • Gated Resource Sharing Engine</p>
+      <footer className="border-t border-border py-6 bg-surface text-center text-xs font-mono text-ink-secondary">
+        <p>apt.share v1.0 • Gated Neighborhood Resource Ledger System</p>
       </footer>
     </div>
   );
 };
+
